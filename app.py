@@ -246,10 +246,42 @@ if uploaded_files:
         try:
             if file.name.endswith('.csv'):
                 temp_df = pd.read_csv(file, encoding='utf-8')
+                dfs.append(temp_df)
+                loaded_names.append(f"• {file.name} ({len(temp_df)} wierszy)")
             else:
-                temp_df = pd.read_excel(file)
-            dfs.append(temp_df)
-            loaded_names.append(f"• {file.name} ({len(temp_df)} wierszy)")
+                xls = pd.ExcelFile(file)
+                sheet_names = xls.sheet_names
+                loaded_sheet = None
+                
+                for sheet in sheet_names:
+                    sheet_df = pd.read_excel(xls, sheet_name=sheet)
+                    if not sheet_df.empty:
+                        # Sprawdzamy, czy arkusz zawiera dane URL-i
+                        has_url = False
+                        for col in sheet_df.columns:
+                            col_lower = str(col).lower()
+                            if any(x in col_lower for x in ["url", "link", "adres"]):
+                                has_url = True
+                                break
+                        if not has_url:
+                            str_cols = sheet_df.select_dtypes(include=['object']).columns
+                            for col in str_cols:
+                                if sheet_df[col].astype(str).str.contains("http").any():
+                                    has_url = True
+                                    break
+                        if has_url:
+                            loaded_sheet = (sheet, sheet_df)
+                            break
+                
+                if loaded_sheet:
+                    temp_df = loaded_sheet[1]
+                    dfs.append(temp_df)
+                    loaded_names.append(f"• {file.name} (Arkusz: '{loaded_sheet[0]}', {len(temp_df)} wierszy)")
+                else:
+                    # Fallback do pierwszego arkusza, jeśli żaden nie zawiera URL-i
+                    temp_df = pd.read_excel(xls, sheet_name=sheet_names[0])
+                    dfs.append(temp_df)
+                    loaded_names.append(f"• {file.name} (Arkusz: '{sheet_names[0]}' - brak URL, {len(temp_df)} wierszy)")
         except Exception as e:
             st.sidebar.error(f"Błąd podczas wczytywania {file.name}: {e}")
             
