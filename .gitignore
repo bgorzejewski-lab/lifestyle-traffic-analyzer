@@ -1,0 +1,24 @@
+# Środowisko wirtualne
+.venv/
+venv/
+ENV/
+
+# Python cache
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Streamlit
+.streamlit/config.toml
+# .streamlit/secrets.toml # odkomentuj jeśli przechowujesz tu hasła
+
+# Excel/CSV tymczasowe
+~$*.xlsx
+~$*.xls
+*.log
+
+# Systemowe pliki operacyjne
+.DS_Store
+Thumbs.db
