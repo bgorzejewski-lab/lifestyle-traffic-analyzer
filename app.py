@@ -548,7 +548,7 @@ if patterns:
             margin=dict(l=20, r=20, t=40, b=20),
             yaxis={'categoryorder':'total ascending'}
         )
-        st.plotly_chart(fig1, use_container_width=True)
+        st.plotly_chart(fig1, width="stretch")
         
     with tab2:
         # Bubble chart (Growth-Share Matrix)
@@ -575,7 +575,7 @@ if patterns:
             font_family="Plus Jakarta Sans",
             margin=dict(l=20, r=20, t=40, b=20)
         )
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
         
     with tab3:
         # Wykres rozkładu poszczególnych tagów i ich średnich kliknięć
@@ -616,7 +616,7 @@ if patterns:
                 font_family="Plus Jakarta Sans",
                 margin=dict(l=10, r=10, t=40, b=10)
             )
-            st.plotly_chart(fig3, use_container_width=True)
+            st.plotly_chart(fig3, width="stretch")
         else:
             st.info("Brak wystarczającej liczby wyodrębnionych tagów do wygenerowania mapy.")
 
@@ -653,7 +653,7 @@ with col1:
                     "Wykryte Słowo": info["value"],
                     "Pozycja w tekście": info["start"]
                 })
-            st.dataframe(pd.DataFrame(tag_rows), hide_index=True, use_container_width=True)
+            st.dataframe(pd.DataFrame(tag_rows), hide_index=True, width="stretch")
         else:
             st.info("System NLP nie wykrył w tytule żadnych predefiniowanych tagów lifestylowych.")
 
